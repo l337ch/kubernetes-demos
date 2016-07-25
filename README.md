@@ -11,3 +11,9 @@ gcloud container clusters create gke-zonar-demo  --zone us-central1-a \
 gcloud container clusters get-credentials gke-zonar-demo
 ```
 Proceed with demoing Deployments and Pet Sets
+
+## Clean up
+- Delete the google container demo cluster
+```
+gcloud container clusters delete gke-zonar-demo
+```

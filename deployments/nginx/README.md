@@ -25,5 +25,19 @@ while true; do curl -IsL 104.154.226.54 | grep "HTTP/1.1"; sleep 1; done;
 ```
 Now update the nginx image to 1.9.1
 ```
-kubectl set image deployment/nginx-deployment nginx=nginx:1.9.1
+kubectl set image deployment/nginx-demo nginx=nginx:1.9.1
+```
+Check that the rollout was a success
+```
+kubectl rollout status deployment/nginx-demo
+```
+
+Rollout a bad update
+```
+kubectl set image deployment/nginx-demo nginx=nginx:1.91
+```
+
+Roll it back
+```
+kubectl rollout undo deployment/nginx-demo
 ```

@@ -46,6 +46,23 @@ Roll it back
 ```
 kubectl rollout undo deployment/nginx-demo
 ```
+## Nodepool update
+
+Create a new nodepool for the cluster
+```
+gcloud container node-pools create upgraded-pool --cluster=gke-zonar-demo --num-nodes=3 --machine-type=n1-standard-4 --zone=us-central1-a
+```
+Update the deployment with the new pool info
+```
+kubectl edit deployments nginx-demo
+```
+Edit the nodeSelector to `cloud.google.com/gke-nodepool: upgraded-pool` and save and quit.
+Check the status of 'nginx-demo' and when successful delete the old 'default-pool'
+```
+gcloud container node-pools delete default-pool --cluster=gke-zonar-demo --zone=us-central1-a
+```
+
+See that the `curl` check always shows a status of 200
 
 ## Clean up
 Remove the nginx Deployment demo

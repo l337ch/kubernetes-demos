@@ -43,5 +43,3 @@ kubectl run -it --rm --image postgres pg-client --restart=Never /bin/sh
 psql -h postgresdb-0.postgres -U postgres
 \d
 ```
-## Clean up
-- Delete the google container demo cluster

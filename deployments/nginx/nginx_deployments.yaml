@@ -1,7 +1,7 @@
 apiVersion: extensions/v1beta1
 kind: Deployment
 metadata:
-  name: nginx-deployment
+  name: nginx-demo
 spec:
   replicas: 3
   template:
@@ -13,4 +13,25 @@ spec:
       - name: nginx
         image: nginx:1.7.9
         ports:
-        - containerPort: 80
+          - containerPort: 80
+            hostPort: 80
+            protocol: TCP
+      nodeSelector:
+         cloud.google.com/gke-nodepool: default-pool
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    name: nginx
+  name: nginx
+spec:
+  selector:
+    app: nginx
+  ports:
+  - name: nginx
+    port: 80
+    protocol: TCP
+    targetPort: 80
+  sessionAffinity: None
+  type: LoadBalancer

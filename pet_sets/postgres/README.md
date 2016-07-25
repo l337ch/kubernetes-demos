@@ -1,17 +1,47 @@
 
 # Demo of Postgres Pet Sets
 
-Create a postgres pet set consisting of 3 postgres database servers.
-Connect to each of the postgres servers and create a table and populate it with unique data.
-CREATE DATABASE zonar_demo
-
-  CREATE TABLE demo_table (
+## Create some Postgres servers using k8s Pet Sets
+- Create a postgres pet set consisting of 3 postgres  servers or Pods.
+```
+kubectl create -f pet_sets/postgres/pg_pet_set.yaml
+```
+- Connect to each of the postgres servers and create a database with a table and populate it with unique data.
+```
+kubectl run -it --rm --image postgres pg-client --restart=Never /bin/sh
+psql -h postgresdb-0.postgres -U postgres
+CREATE TABLE demo_table0 (
     did     integer,
     name    varchar(40)
-    CONSTRAINT con1 CHECK (did > 100 AND name <> '')
-  );
-Connect to one of the postgres servers and view the data
-Delete one of the nodes from the cluster that belongs to the chosen database servers
-Watch for the postgres server to recover
-Connect to the same postgres server as before by hostname
-Show that the data still exists on the postgres database server
+);
+INSERT INTO demo_table0 VALUES ('1', 'test 0');
+\q
+psql -h postgresdb-1.postgres -U postgres
+CREATE TABLE demo_table1 (
+    did     integer,
+    name    varchar(40)
+);
+INSERT INTO demo_table1 VALUES ('1', 'test 1');
+\q
+psql -h postgresdb-2.postgres -U postgres
+CREATE TABLE demo_table2 (
+    did     integer,
+    name    varchar(40)
+);
+INSERT INTO demo_table2 VALUES ('1', 'test 2');
+\q
+```
+## Simulate a cluster failure
+- Reduce the cluster size to 1
+```
+gcloud container clusters resize gke-zonar-demo --size 1
+```
+- Watch for the postgres server to recover
+- Connect to one of the relaunched  postgres server  hostname via the postgres Pod as before and show that the data still exists on the postgres instance
+```
+kubectl run -it --rm --image postgres pg-client --restart=Never /bin/sh
+psql -h postgresdb-0.postgres -U postgres
+\d
+```
+## Clean up
+- Delete the google container demo cluster

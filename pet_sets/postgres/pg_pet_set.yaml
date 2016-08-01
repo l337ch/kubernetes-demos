@@ -43,7 +43,7 @@ spec:
         - mountPath: /var/lib/postgresql/data
           name: pg-data
       nodeSelector:
-         cloud.google.com/gke-nodepool: upgraded-pool
+         cloud.google.com/gke-nodepool: default-pool
   volumeClaimTemplates:
   - metadata:
       name: pg-data
